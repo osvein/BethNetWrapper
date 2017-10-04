@@ -5,6 +5,14 @@ Servers/endpoints/resources:
 
 	account.bethesda.net:443
 	GET /status HTTP/1.1
+	GET /en/api/signout HTTP/1.1
+		clears all the cookies except bnet-remember-username
+	POST /en/login HTTP/1.1
+		fp
+		username
+		password //plaintext
+		rememberUsername=on
+		sets bnet-username, bnet-session and bnet-remember-username
 	Accept: application/json
 
 	services.bethesda.net:443
@@ -40,9 +48,53 @@ Servers/endpoints/resources:
 		text=
 		category=["Animals"]
 	GET /ugc-workshop/content/get HTTP/2.0
-		content_id //content id
+		content_id
 	GET /ugc-workshop/list/author HTTP/2.0
-		author_id //author id
+		author_id
+	GET /ugc-content/list/subscribe HTTP/2.0
+		number_results
+		order
+		page
+		platform
+		product
+		sort
+		text
+	GET /ugc-content/list/me HTTP/2.0
+		number_results
+		order
+		page
+		platform
+		product
+		sort
+		text
+		broken=true
+	GET /ugc-content/list/followed HTTP/2.0
+		number_results
+		order
+		page
+		platform
+		product
+		sort
+		text
+	OPTIONS /ugc-content/add-subscription
+	POST /ugc-content/add-subscription
+		content_id
+	OPTIONS /ugc-content/unsubscribe
+	DELETE /ugc-content/unsubscribe
+		content_id
+	OPTIONS /ugc-content/unfollow HTTP/2.0
+	DELETE /ugc-content/unfollow HTTP/2.0
+		content_id
+	OPTIONS /ugc-content/follow HTTP/2.0
+	POST /ugc-content/follow HTTP/2.0
+		content_id
+	GET /ugc-content/moderation-categories HTTP/2.0
+		product
+	GET /bwa/auth HTTP/2.0
+		code
+		fp
+		state
+		in goes bnet-username cookie, out comes bnet-workshop
 	Accept: application/json
 
 	bethesda.net:443
@@ -50,6 +102,11 @@ Servers/endpoints/resources:
 		1: id
 		2: page
 		_=1507127655114
+	GET /community/comments/isLoggedIn HTTP/2.0
+		_=1507144755294
+		buid //looks like some sort of uuid
+	GET /communityapi/ssobethesda/logout HTTP/2.0
+		
 	Accept: application/json
 	
 Response format:
@@ -66,6 +123,9 @@ Response format:
 
 Observations:
 
+	query param "product"
+		fallout4
+		skyrim
 	query param "sort" for
 	/ugc-workshop/list/categories
 	/ugc-workshop/list/
@@ -94,3 +154,21 @@ Observations:
 		GET array
 	/ugc-workshop/list/
 		JSON array
+	cookie "bnet-username"
+		JSON object
+			username
+			lang
+			buid
+			country
+	cookie "bnet-workshop"		
+	cookie "bnet-remember-username"
+		JSON object
+			username
+	cookie "bnet-redirect"
+	cookie "bnet-session"
+	cookie "bnet-join-user"
+	cookie "bnet-message"
+	cookie "bnet-oauth-params"
+	cookie "bnet-workshop"
+
+Bethesda Community is based on NodeBB
